@@ -23,7 +23,10 @@ export default function Sidebar({ notes, setActiveNoteId,activeNoteId, setIsCrea
             <li className="hover:bg-gray-200" key={note.id}>
               <button
                 className={activeNoteId === note.id ? "w-full font-bold" : "w-full"}
-                onClick={() => setActiveNoteId(note.id)}
+                onClick={() => 
+                  {
+                    setIsCreating(false);
+                    setActiveNoteId(note.id)}}
               >
                 {note.title}
               </button>
