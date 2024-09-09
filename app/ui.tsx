@@ -15,7 +15,7 @@ export default function UI() {
     Database["public"]["Tables"]["note"]["Row"][]
   >([]);
   const fetchNotes = async () => {
-    const { data, error } = await supabase.from("note").select("*");
+    const { data, error } = await supabase.from("note").select("*").ilike("title", `%${search}%`);
 
     if (error) {
         alert(error.message);
@@ -23,19 +23,26 @@ export default function UI() {
     } 
     setNotes(data);
   };
-  const activeNoteId = null;
-  const isCreating = null;
+  const [search, setSearch] = useState("");
+  const [isCreating, setIsCreating] = useState(false);
+  const [activeNoteId, setActiveNoteId] = useState(null);
+
   useEffect(() => {
     fetchNotes();
   }, []);
+
+  useEffect(() => {
+    fetchNotes();
+  }, [search])
+
 
   return (
     <main className="w-full h-screen flex flex-col">
       <Header />
       <div className="grow relative">
-      <Sidebar notes={notes} />
+      <Sidebar notes={notes} setActiveNoteId={setActiveNoteId} activeNoteId={activeNoteId} setIsCreating={setIsCreating} search={search} setSearch={setSearch} />
         {isCreating ? <NewNote /> : 
-            activeNoteId ? <NoteViewer note={notes.find((note) => note.id === activeNoteId)}/> : <EmptyNote /> 
+            activeNoteId ? <NoteViewer note={notes.find((note) => note.id === activeNoteId)} setActiveNoteId={setActiveNoteId} fetchNotes={fetchNotes} /> : <EmptyNote /> 
         }
       </div>
     </main>
