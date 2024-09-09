@@ -1,12 +1,32 @@
 "use client";
 
+import { supabase } from "@/utils/supabase";
 import { useState } from "react";
 
-export default function NewNote() {
+export default function NewNote({
+  fetchNotes,
+  setIsCreating,
+  setActiveNoteId,
+}) {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
 
-  const onSave = () => {};
+  const onSave = async () => {
+    if (!title || !content) {
+      alert("Title and content are required.");
+      return;
+    }
+    const { data, error } = await supabase
+      .from("note")
+      .insert({ title, content })
+      .select();
+    if (error) {
+      alert(error.message);
+    }
+    await fetchNotes();
+    setIsCreating(false);
+    setActiveNoteId((data as any[])[0].id);
+  };
   return (
     <div className="w-2/3 p-2 flex flex-col font-bold text-xl gap-2 items-center absolute top-0 right-0 bottom-0">
       <input

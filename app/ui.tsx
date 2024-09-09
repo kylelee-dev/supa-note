@@ -41,7 +41,7 @@ export default function UI() {
       <Header />
       <div className="grow relative">
       <Sidebar notes={notes} setActiveNoteId={setActiveNoteId} activeNoteId={activeNoteId} setIsCreating={setIsCreating} search={search} setSearch={setSearch} />
-        {isCreating ? <NewNote /> : 
+        {isCreating ? <NewNote setIsCreating={setIsCreating} setActiveNoteId={setActiveNoteId} fetchNotes={fetchNotes} /> : 
             activeNoteId ? <NoteViewer note={notes.find((note) => note.id === activeNoteId)} setActiveNoteId={setActiveNoteId} fetchNotes={fetchNotes} /> : <EmptyNote /> 
         }
       </div>
